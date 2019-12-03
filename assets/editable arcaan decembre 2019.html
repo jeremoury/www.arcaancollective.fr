@@ -1,0 +1,452 @@
+<!DOCTYPE html><html lang=""><head>
+    <meta charset="UTF-8">
+    <!-- generator meta tag -->
+    <!-- leave this for stats and Silex version check -->
+    <meta name="generator" content="Silex v2.2.10">
+    <!-- End of generator meta tag -->
+    <link data-silex-static="" href="https://editor.silex.me/static/2.10/normalize.css" rel="stylesheet">
+    <link data-silex-static="" href="https://editor.silex.me/static/2.10/front-end.css" rel="stylesheet">
+    <script data-silex-static="" type="text/javascript" src="https://editor.silex.me/static/2.10/jquery.js"></script>
+    <script data-silex-static="" type="text/javascript" src="https://editor.silex.me/static/2.10/jquery-ui.js"></script>
+    <script data-silex-static="" type="text/javascript" src="https://editor.silex.me/static/2.10/pageable.js"></script>
+    <script data-silex-static="" type="text/javascript" src="https://editor.silex.me/static/2.10/front-end.js"></script>
+
+    <style type="text/css" class="silex-style">@import url(https://fontlibrary.org/face/gidole-regular);@import url(https://fonts.googleapis.com/css?family=Josefin+Slab);@import url(https://fonts.googleapis.com/css?family=Josefin+Sans);body.enable-mobile {padding: 0;}div.full-width {left: 0; width: 100%;}div.fullWidth {width: 100%;}div.bg-img {filter: contrast(0.8); -webkit-filter: contrast(0.8);}body {text-align: center; font-family: 'Josefin Slab', serif; color: #4b4b4b;}.header {color: white; text-transform: uppercase; font-family: 'Josefin Slab', serif;}.header h1,
+.header h2 {text-transform: uppercase; font-family: 'Josefin Slab', serif;}.header h1 {background-color: #53cd9c; display: inline; padding: 20px; line-height: 2.2; font-size: 3em; letter-spacing: 20px; text-transform: uppercase; font-family: 'Josefin Slab', serif;}.header h3 {font-weight: 10; text-transform: uppercase; font-family: 'Josefin Slab', serif;}.button {text-transform: uppercase; font-weight: 100; color: white; background-color: #53cd9c; line-height: 3; font-family: 'Josefin Slab', serif;}.button.white {background-color: white; color: #4b4b4b;}div.nav {color: white; text-transform: uppercase; font-family: 'Josefin Slab', serif;}.nav li {list-style: none; display: inline-block; padding: 25px; cursor: pointer; line-height: 0;}.picture-bg {color: white;}.nav a.active-menu {color: #cc0000;}a:link {color: white; text-decoration: none;}a:visited {color: white; text-decoration: none;}a:active {color: purple; text-decoration: none;}</style>
+    <script type="text/javascript" class="silex-script">
+        /**
+         * keep the menu visible when you scroll down
+         */
+        $(function() {
+            var nav = $(".nav");
+            var navBg = $(".nav-bg");
+            var navOffset = nav.offset().top;
+            $(window).scroll(function() {
+                if ($(this).scrollTop() <= navOffset) {
+                    nav.css('position', '');
+                    navBg.css('position', '');
+                    nav.css('top', '');
+                    navBg.css('top', '');
+                    nav.css('z-index', '');
+                }
+                else {
+                    nav.css('position', 'fixed');
+                    navBg.css('position', 'fixed');
+                    nav.css('top', '0');
+                    navBg.css('top', '0');
+                    nav.css('z-index', '101');
+                }
+            });
+        });
+        
+        /*
+         * active menu widget for Silex
+         * create an element which links to an anchor, e.g. an element with a link to #anchor1
+         * add the css class "anchor-link" to this element
+         * create an element which is the anchor, e.g. an element with the css class "anchor1"
+         * when the user clicks on the link, the scroll slides until the element is visible
+         * when the user slides and the element is visible, the link gets a css class "active-menu"
+         */
+        $(function() {
+            // Cache selectors
+            var lastId,
+                // All list items
+                menuItems = $(".nav a"),
+                // Anchors corresponding to menu items
+                // find the name of the elements which are anchors
+                scrollItems = menuItems.map(function(){
+                    // the names are in the href attribute of the anchor links
+                    var attr = $(this).attr("data-silex-href") || $(this).attr("href");
+                    // case of a link in text field or an external link after publish
+                    $(this).find("[href]").each(function() {
+                        attr = $(this).attr("href");
+                    });
+                    // case of an "external link" before publish
+                    $(this).find("[data-silex-href]").each(function() {
+                        attr = $(this).attr("href");
+                    });
+                    // the links to anchors are expected to start with #
+                    if(attr && attr.indexOf("#") === 0) {
+                        var name = attr.substring(1);
+                        var item = $("." + name);
+                        // check if there is a hash in the URL to scroll to the anchor at start
+                        if(window.location.hash.indexOf(name) === 1) {
+                            var offsetTop = item.offset().top;
+                            $('html, body').stop().animate({
+                                scrollTop: offsetTop
+                            }, 300);
+                        }
+                        // now find the element itself, which has the name as a css class
+                        if (item.length) { return {
+                                "link": this,
+                                "item": item.get(0)
+                            };
+                        }
+                    }
+                });
+            // Bind click handler to menu items
+            // so we can get a fancy scroll animation
+            scrollItems.each(function() {
+                var link = this.link;
+                var item = this.item;
+                $(link).click(function(e){
+                  var offsetTop = $(item).offset().top;
+                  $('html, body').stop().animate({
+                      scrollTop: offsetTop - 50
+                  }, 300);
+                  e.preventDefault();
+                });
+            })
+        
+            // Bind to scroll
+            $(window).scroll(function(){
+               // Get container scroll position
+               var fromTop = $(this).scrollTop() + 50;
+               // Get id of current scroll item
+               var cur = scrollItems.map(function(){
+                 if ($(this.item).offset().top <= fromTop)
+                   return this;
+               });
+               // add the css class on the current menu item
+               $(".active-menu").removeClass("active-menu");
+               if(cur.length > 0) {
+                   cur = cur[cur.length-1];
+                   $(cur.link).addClass("active-menu");
+               }
+            });
+        });
+        
+        /**
+         * this widget https://github.com/silexlabs/Silex/issues/443
+         */
+        $(function() {
+        
+            window.sr = ScrollReveal({
+                distance: '100px'
+            });
+            sr.reveal('.from-left', { origin:  'left'});
+            sr.reveal('.from-right', { origin:  'right'});
+            sr.reveal('.from-top', { origin:  'top'});
+            sr.reveal('.from-bottom', { origin:  'bottom'});
+        
+        })
+    </script>
+    <style class="silex-inline-styles" type="text/css">.body-initial {background-color: rgba(0,0,0,1);}.silex-id-1488364699113-3 {top: 703px; left: 5px; background-color: rgba(0,0,0,1); min-width: 1054px;}.silex-id-1488364699112-2 {min-height: 82px; background-color: transparent; top: 15px; left: 113px; width: 1054px;}.silex-id-1465466883063-5 {width: 980px; top: -2px; left: -121px; min-height: 13px; background-color: rgba(0,0,0,1);}@media only screen and (max-width: 480px) {.silex-id-1465466883063-5 {top: 231px; left: 11px; width: 423px; min-height: 178px;}}.silex-id-1488365138615-7 {top: 5px; left: 5px; background-color: rgba(0,0,0,1); background-size: cover; background-repeat: no-repeat; background-position: center center; background-attachment: fixed; min-height: 704px;}@media only screen and (max-width: 480px) {.silex-id-1488365138615-7 {}}.silex-id-1488365138614-6 {min-height: 704px; background-color: transparent; top: 15px; left: 183px; width: 890px;}@media only screen and (max-width: 480px) {.silex-id-1488365138614-6 {width: 100%; min-height: 500px;}}.silex-id-1530835012904-3 {width: 562px; top: 351px; left: 189px; min-height: 33px; background-color: transparent;}@media only screen and (max-width: 480px) {.silex-id-1530835012904-3 {width: 100%; background-color: transparent;}}.silex-id-1570538037403-3 {width: 211px; min-height: 377px; top: 60px; left: 254px;}.silex-id-1488364565046-1 {top: 897px; left: 5px; background-color: rgba(0,0,0,1); min-width: 960px;}.silex-id-1488364565045-0 {min-height: 888px; background-color: transparent; top: 15px; left: 111px; width: 960px;}@media only screen and (max-width: 480px) {.silex-id-1488364565045-0 {width: 100%;}}.silex-id-1465466932973-6 {width: 741px; top: 11px; left: 114px; color: white; min-height: 185px;}@media only screen and (max-width: 480px) {.silex-id-1465466932973-6 {width: 100%;}}.silex-id-1530834503159-1 {width: 941px; top: 127px; left: 12px; color: white; text-align: justify; font-family: 'Josefin Sans', sans-serif; min-height: 386px;}@media only screen and (max-width: 480px) {.silex-id-1530834503159-1 {width: 100%;}}.silex-id-1530834406227-0 {width: 597px; top: 657px; left: 352px; color: white; text-align: right; font-family: 'Josefin Sans', sans-serif;}@media only screen and (max-width: 480px) {.silex-id-1530834406227-0 {top: 1218px; left: 11px; width: 400px; min-height: 510px;}}.silex-id-1567848122369-0 {width: 149px; top: 558px; left: 841px; color: white; text-align: justify; font-family: 'Josefin Sans', sans-serif; min-height: 155px;}@media only screen and (max-width: 480px) {.silex-id-1567848122369-0 {width: 100%;}}.silex-id-1570533296248-0 {width: 382px; min-height: 322px; top: 555px; left: -186px;}.silex-id-1488365471671-9 {top: 1801px; left: 5px; background-color: rgba(0,0,0,1); min-width: 982px;}.silex-id-1488365471670-8 {min-height: 1228px; background-color: transparent; top: 15px; left: 137px; width: 982px;}@media only screen and (max-width: 480px) {.silex-id-1488365471670-8 {width: 100%;}}.silex-id-1465467207085-12 {min-height: 60px; width: 731px; top: 1221px; left: 110px;}.silex-id-1540485568596-173 {width: 264px; background-color: transparent; min-height: 318px; top: 550px; left: 350px;}.silex-id-1540485568597-174 {width: 269px; background-color: transparent; min-height: 159px; top: 4px; left: 2px;}.silex-id-1540485568599-175 {width: 262px; top: 180px; left: 3px; color: white; min-height: 83px;}.silex-id-1540486413842-193 {width: 262px; min-height: 50px; top: 259px; left: 3px;}.silex-id-1563298119868-12 {width: 275px; background-color: transparent; min-height: 318px; top: 200px; left: 350px;}.silex-id-1563298119868-13 {width: 269px; background-color: transparent; min-height: 159px; top: 4px; left: 2px;}.silex-id-1563298119869-14 {width: 262px; top: 180px; left: 3px; color: white; min-height: 83px;}.silex-id-1540482674380-81 {width: 264px; background-color: transparent; min-height: 318px; top: 200px; left: 0px;}.silex-id-1540482674380-82 {width: 269px; background-color: transparent; min-height: 159px; top: 4px; left: 2px;}.silex-id-1540482674382-83 {width: 262px; top: 180px; left: 3px; color: white; min-height: 83px;}.silex-id-1540456449724-2 {width: 271px; background-color: transparent; min-height: 263px; top: 200px; left: 700px;}@media only screen and (max-width: 480px) {.silex-id-1540456449724-2 {min-height: 337px;}}.silex-id-1540454366740-0 {width: 269px; background-color: transparent; min-height: 159px; top: 4px; left: 2px;}.silex-id-1540456435864-1 {width: 266px; top: 160px; left: 4px; color: white; min-height: 96px;}@media only screen and (max-width: 480px) {.silex-id-1540456435864-1 {left: 3px; top: 205px;}}.silex-id-1465466987435-8 {width: 740px; top: 35px; left: 125px; color: white; min-height: 150px;}@media only screen and (max-width: 480px) {.silex-id-1465466987435-8 {width: 100%;}}.silex-id-1570537712523-0 {width: 750px; top: 0px; left: 114px; color: white; min-height: 108px;}@media only screen and (max-width: 480px) {.silex-id-1570537712523-0 {width: 100%;}}.silex-id-1488365629067-13 {top: 3047px; left: 5px; background-color: rgba(0,0,0,1); min-width: 980px;}.silex-id-1488365629067-12 {min-height: 529px; background-color: transparent; top: 15px; left: 150px; width: 980px;}@media only screen and (max-width: 480px) {.silex-id-1488365629067-12 {width: 100%;}}.silex-id-1465477372671-26 {width: 740px; top: 34px; left: 115px; color: white; min-height: 57px;}.silex-id-1553450059029-8 {width: 271px; background-color: transparent; min-height: 263px; top: 150px; left: 350px;}@media only screen and (max-width: 480px) {.silex-id-1553450059029-8 {min-height: 300px;}}.silex-id-1553450059030-9 {width: 269px; background-color: transparent; min-height: 159px; top: 4px; left: 2px;}.silex-id-1553450059034-10 {width: 262px; top: 180px; left: 3px; color: white; min-height: 50px;}.silex-id-1540459349896-13 {width: 262px; min-height: 50px; top: 233px; left: 5px;}.silex-id-1488365537239-11 {top: 3611px; left: 5px; background-size: cover; background-attachment: fixed; background-color: rgba(0,0,0,1); min-width: 980px;}.silex-id-1488365537239-10 {min-height: 770px; background-color: transparent; top: 15px; left: 150px; width: 980px;}.silex-id-1465467258395-16 {width: 748px; top: 20px; left: 113px; color: white; min-height: 154px;}@media only screen and (max-width: 480px) {.silex-id-1465467258395-16 {background-color: rgba(75,75,75,1);}}.silex-id-1540460118816-26 {width: 289px; background-color: transparent; min-height: 304px; top: 250px; left: 350px;}.silex-id-1540460118817-27 {width: 261px; background-color: transparent; min-height: 159px; top: 4px; left: 22px;}.silex-id-1540460118819-28 {width: 262px; top: 180px; left: 23px; color: white; min-height: 83px;}.silex-id-1488365682509-15 {top: 4306px; left: 5px; background-color: rgba(0,0,0,1);}.silex-id-1488365682508-14 {min-height: 785px; background-color: transparent; top: 15px; left: 262px; width: 960px;}.silex-id-1465477397939-27 {width: 740px; top: 20px; left: 106px; color: white; min-height: 203px;}.silex-id-1563296048914-0 {width: 282px; background-color: transparent; min-height: 281px; top: 253px; left: 338px;}@media only screen and (max-width: 480px) {.silex-id-1563296048914-0 {min-height: 300px;}}.silex-id-1563296048915-1 {width: 269px; background-color: transparent; min-height: 159px; top: 4px; left: 2px;}.silex-id-1563296048915-2 {width: 262px; top: 180px; left: 3px; color: white; min-height: 50px;}.silex-id-1563296048915-3 {width: 262px; min-height: 50px; top: 243px; left: 4px;}.silex-id-1488365805975-19 {top: 5954px; left: 5px; background-color: rgba(0,0,0,1); background-size: cover; background-attachment: fixed; min-height: 810px;}.silex-id-1488365805974-18 {min-height: 810px; background-color: transparent; top: 15px; left: 262px; width: 960px;}@media only screen and (max-width: 480px) {.silex-id-1488365805974-18 {width: 100%;}}.silex-id-1465477486469-29 {width: 731px; top: 53px; left: 110px; color: white; min-height: 53px;}@media only screen and (max-width: 480px) {.silex-id-1465477486469-29 {width: 100%; background-color: transparent;}}.silex-id-1540479319820-68 {width: 437px; height: 325px; background-color: transparent; top: 222px; left: 268px;}@media only screen and (max-width: 480px) {.silex-id-1540479319820-68 {width: 80%; height: 300px;}}.silex-id-1488365905062-21 {top: 7284px; left: 5px; min-height: 48px;}.silex-id-1488365905062-20 {top: 15px; left: 187px; width: 960px; min-height: 48px; background-color: rgba(0,0,0,1);}@media only screen and (max-width: 480px) {.silex-id-1488365905062-20 {width: 100%;}}.silex-id-1570538184811-4 {width: 24px; min-height: 24px; top: 12px; left: 241px;}.silex-id-1570538224477-5 {width: 24px; min-height: 24px; top: 12px; left: 459px;}.silex-id-1570538251557-6 {width: 24px; min-height: 24px; top: 14px; left: 670px;}.silex-id-1442914589168-2 {min-height: 50px; width: 400px; top: 635px; left: 6px; background-color: transparent;}@media only screen and (max-width: 480px) {.silex-id-1442914589168-2 {width: 100%; left: 48px; top: 8831px;}}.silex-id-1442914737143-3 {min-height: 28px; width: 250px; top: 11px; left: 80px;}@media only screen and (max-width: 480px) {.silex-id-1442914737143-3 {left: 100px; top: 100px;}}</style>
+
+    <script type="text/json" class="silex-json-styles">[{"fonts":[{"family":"'josefin slab', sans-serif","href":"https://fonts.google.com/specimen/Josefin+Slab"}],"desktop":{"body-initial":{"background-color":"rgba(0,0,0,1)"},"silex-id-1442914589168-2":{"min-height":"50px","width":"400px","top":"635px","left":"6px","background-color":"transparent"},"silex-id-1442914737143-3":{"min-height":"28px","width":"250px","top":"11px","left":"80px"},"silex-id-1465466883063-5":{"width":"980px","top":"-2px","left":"-121px","min-height":"13px","background-color":"rgba(0,0,0,1)"},"silex-id-1465466932973-6":{"width":"741px","top":"11px","left":"114px","color":"white","min-height":"185px"},"silex-id-1465466987435-8":{"width":"740px","top":"35px","left":"125px","color":"white","min-height":"150px"},"silex-id-1465467207085-12":{"min-height":"60px","width":"731px","top":"1221px","left":"110px"},"silex-id-1465467237451-15":{"min-height":"203px","width":"739px","top":"2687px","left":"100px"},"silex-id-1465467258395-16":{"width":"748px","top":"20px","left":"113px","color":"white","min-height":"154px"},"silex-id-1465467353787-20":{"min-height":"181px","width":"238px","top":"2985px","left":"868px"},"silex-id-1465477258671-25":{"min-height":"181px","width":"238px","top":"3451px","left":"868px"},"silex-id-1465477372671-26":{"width":"740px","top":"34px","left":"115px","color":"white","min-height":"57px"},"silex-id-1465477397939-27":{"width":"740px","top":"20px","left":"106px","color":"white","min-height":"203px"},"silex-id-1465477454464-28":{"width":"739px","top":"47px","left":"103px","color":"white","min-height":"203px"},"silex-id-1465477486469-29":{"width":"731px","top":"53px","left":"110px","color":"white","min-height":"53px"},"silex-id-1465478607203-36":{"min-height":"100px","width":"100px","top":"100px","left":"100px"},"silex-id-1465489270048-42":{"min-height":"291px","width":"294px","top":"1183px","left":"0px","background-color":"rgba(231,45,45,1)"},"silex-id-1488364565045-0":{"min-height":"888px","background-color":"transparent","top":"15px","left":"111px","width":"960px"},"silex-id-1488364565046-1":{"top":"897px","left":"5px","background-color":"rgba(0,0,0,1)","min-width":"960px"},"silex-id-1488364699112-2":{"min-height":"82px","background-color":"transparent","top":"15px","left":"113px","width":"1054px"},"silex-id-1488364699113-3":{"top":"703px","left":"5px","background-color":"rgba(0,0,0,1)","min-width":"1054px"},"silex-id-1488365138614-6":{"min-height":"704px","background-color":"transparent","top":"15px","left":"183px","width":"890px"},"silex-id-1488365138615-7":{"top":"5px","left":"5px","background-color":"rgba(0,0,0,1)","background-size":"cover","background-repeat":"no-repeat","background-position":"center center","background-attachment":"fixed","min-height":"704px"},"silex-id-1488365471670-8":{"min-height":"1228px","background-color":"transparent","top":"15px","left":"137px","width":"982px"},"silex-id-1488365471671-9":{"top":"1801px","left":"5px","background-color":"rgba(0,0,0,1)","min-width":"982px"},"silex-id-1488365537239-10":{"min-height":"770px","background-color":"transparent","top":"15px","left":"150px","width":"980px"},"silex-id-1488365537239-11":{"top":"3611px","left":"5px","background-size":"cover","background-attachment":"fixed","background-color":"rgba(0,0,0,1)","min-width":"980px"},"silex-id-1488365629067-12":{"min-height":"529px","background-color":"transparent","top":"15px","left":"150px","width":"980px"},"silex-id-1488365629067-13":{"top":"3047px","left":"5px","background-color":"rgba(0,0,0,1)","min-width":"980px"},"silex-id-1488365682508-14":{"min-height":"785px","background-color":"transparent","top":"15px","left":"262px","width":"960px"},"silex-id-1488365682509-15":{"top":"4306px","left":"5px","background-color":"rgba(0,0,0,1)"},"silex-id-1488365701489-16":{"min-height":"594px","background-color":"transparent"},"silex-id-1488365805974-18":{"min-height":"810px","background-color":"transparent","top":"15px","left":"262px","width":"960px"},"silex-id-1488365805975-19":{"top":"5954px","left":"5px","background-color":"rgba(0,0,0,1)","background-size":"cover","background-attachment":"fixed","min-height":"810px"},"silex-id-1488365905062-20":{"top":"15px","left":"187px","width":"960px","min-height":"48px","background-color":"rgba(0,0,0,1)"},"silex-id-1488365905062-21":{"top":"7284px","left":"5px","min-height":"48px"},"silex-id-1530834406227-0":{"width":"597px","top":"657px","left":"352px","color":"white","text-align":"right","font-family":"'Josefin Sans', sans-serif"},"silex-id-1530834503159-1":{"width":"941px","top":"127px","left":"12px","color":"white","text-align":"justify","font-family":"'Josefin Sans', sans-serif","min-height":"386px"},"silex-id-1530835012904-3":{"width":"562px","top":"351px","left":"189px","min-height":"33px","background-color":"transparent"},"silex-id-1540454366740-0":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540456435864-1":{"width":"266px","top":"160px","left":"4px","color":"white","min-height":"96px"},"silex-id-1540456449724-2":{"width":"271px","background-color":"transparent","min-height":"263px","top":"200px","left":"700px"},"silex-id-1540457251363-4":{"width":"267px","background-color":"transparent","min-height":"201px","top":"4px","left":"2px"},"silex-id-1540457251366-5":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540458588355-7":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540458588357-8":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1540458662789-10":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540458662791-11":{"width":"262px","min-height":"50px","top":"136px","left":"5px"},"silex-id-1540459035862-12":{"width":"214px","min-height":"33px","top":"261px","left":"31px"},"silex-id-1540459349896-13":{"width":"262px","min-height":"50px","top":"233px","left":"5px"},"silex-id-1540459627656-15":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540459627658-16":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1540459706997-18":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540459748629-21":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540459748631-22":{"width":"262px","min-height":"50px","top":"180px","left":"3px"},"silex-id-1540460118701-24":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540460118702-25":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1540460118817-27":{"width":"261px","background-color":"transparent","min-height":"159px","top":"4px","left":"22px"},"silex-id-1540460118819-28":{"width":"262px","top":"180px","left":"23px","color":"white","min-height":"83px"},"silex-id-1540460118816-26":{"width":"289px","background-color":"transparent","min-height":"304px","top":"250px","left":"350px"},"silex-id-1540460118873-31":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540460118874-32":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1540461173348-44":{"width":"262px","min-height":"83px","top":"180px","left":"3px"},"silex-id-1540461178325-47":{"width":"262px","min-height":"83px","top":"180px","left":"3px"},"silex-id-1540462597460-65":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540462597461-66":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1540479319820-68":{"width":"437px","height":"325px","background-color":"transparent","top":"222px","left":"268px"},"silex-id-1540482674380-82":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540482674382-83":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540482674380-81":{"width":"264px","background-color":"transparent","min-height":"318px","top":"200px","left":"0px"},"silex-id-1540482674430-85":{"width":"267px","background-color":"transparent","min-height":"201px","top":"4px","left":"2px"},"silex-id-1540482674434-86":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540482674504-88":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540482674509-89":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1540483740059-116":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540483740063-117":{"width":"262px","min-height":"83px","top":"180px","left":"3px"},"silex-id-1540483740066-119":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540483740067-120":{"width":"262px","min-height":"50px","top":"180px","left":"3px"},"silex-id-1540483740042-109":{"min-height":"1201px","background-color":"transparent","top":"15px","left":"145px","width":"960px"},"silex-id-1540483763314-122":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540483763316-123":{"width":"262px","min-height":"83px","top":"180px","left":"3px"},"silex-id-1540483788279-125":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540483788282-126":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540483800565-128":{"width":"275px","background-color":"transparent","min-height":"156px","top":"5px","left":"2px"},"silex-id-1540483800567-129":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1540483813868-131":{"width":"267px","background-color":"transparent","min-height":"201px","top":"4px","left":"7px"},"silex-id-1540483813871-132":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540484572474-137":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540484572478-138":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1540484671413-140":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540484671416-141":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540484686195-144":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540484698749-146":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540484698753-147":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485190511-149":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540485190513-150":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485212459-152":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540485212461-153":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485220279-156":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485351141-159":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485370792-161":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540485370796-162":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485388280-165":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540485388283-166":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485547937-168":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540485547941-169":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485559506-171":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540485559508-172":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485568597-174":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540485568599-175":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540485568596-173":{"width":"264px","background-color":"transparent","min-height":"318px","top":"550px","left":"350px"},"silex-id-1540485715690-177":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1540485715693-178":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1540486155510-184":{"width":"249px","top":"-10px","left":"-113px","min-height":"186px"},"silex-id-1540486203344-185":{"width":"278px","min-height":"174px","top":"1px","left":"-148px"},"silex-id-1540486228042-186":{"width":"251px","min-height":"175px","top":"5px","left":"-107px"},"silex-id-1540486335068-187":{"width":"262px","min-height":"50px","top":"260px","left":"3px"},"silex-id-1540486349743-188":{"width":"262px","min-height":"50px","top":"261px","left":"3px"},"silex-id-1540486366635-189":{"width":"262px","min-height":"50px","top":"264px","left":"-1px"},"silex-id-1540486375728-190":{"width":"262px","min-height":"50px","top":"250px","left":"3px"},"silex-id-1540486383718-191":{"width":"262px","min-height":"50px","top":"250px","left":"2px"},"silex-id-1540486409990-192":{"width":"262px","min-height":"50px","top":"258px","left":"2px"},"silex-id-1540486413842-193":{"width":"262px","min-height":"50px","top":"259px","left":"3px"},"silex-id-1553449972724-2":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1553449972726-3":{"width":"262px","min-height":"50px","top":"243px","left":"4px"},"silex-id-1553450036925-5":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1553450036931-6":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1553450036933-7":{"width":"262px","min-height":"50px","top":"243px","left":"4px"},"silex-id-1553450059030-9":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1553450059034-10":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1553450059029-8":{"width":"271px","background-color":"transparent","min-height":"263px","top":"150px","left":"350px"},"silex-id-1553609748355-2":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1553609748357-3":{"width":"262px","top":"178px","left":"9px","color":"white","min-height":"50px"},"silex-id-1553610169575-4":{"width":"256px","min-height":"120px","top":"21px","left":"-112px"},"silex-id-1563296048915-1":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1563296048915-2":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1563296048915-3":{"width":"262px","min-height":"50px","top":"243px","left":"4px"},"silex-id-1563296048914-0":{"width":"282px","background-color":"transparent","min-height":"281px","top":"253px","left":"338px"},"silex-id-1563296567114-5":{"width":"304px","background-color":"transparent","min-height":"157px","top":"11px","left":"0px"},"silex-id-1563296567114-6":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1563297305071-8":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1563297305072-9":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"50px"},"silex-id-1563298119868-13":{"width":"269px","background-color":"transparent","min-height":"159px","top":"4px","left":"2px"},"silex-id-1563298119869-14":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1563298119868-12":{"width":"275px","background-color":"transparent","min-height":"318px","top":"200px","left":"350px"},"silex-id-1563298212063-17":{"width":"262px","top":"180px","left":"3px","color":"white","min-height":"83px"},"silex-id-1563299943086-18":{"width":"269px","background-color":"transparent","min-height":"159px","top":"5px","left":"2px"},"silex-id-1567848122369-0":{"width":"149px","top":"558px","left":"841px","color":"white","text-align":"justify","font-family":"'Josefin Sans', sans-serif","min-height":"155px"},"silex-id-1570533296248-0":{"width":"382px","min-height":"322px","top":"555px","left":"-186px"},"silex-id-1570537712523-0":{"width":"750px","top":"0px","left":"114px","color":"white","min-height":"108px"},"silex-id-1570538037403-3":{"width":"211px","min-height":"377px","top":"60px","left":"254px"},"silex-id-1570538184811-4":{"width":"24px","min-height":"24px","top":"12px","left":"241px"},"silex-id-1570538224477-5":{"width":"24px","min-height":"24px","top":"12px","left":"459px"},"silex-id-1570538251557-6":{"width":"24px","min-height":"24px","top":"14px","left":"670px"}},"mobile":{"silex-id-1465466883063-5":{"top":"231px","left":"11px","width":"423px","min-height":"178px"},"silex-id-1465467258395-16":{"background-color":"rgba(75,75,75,1)"},"silex-id-1465477486469-29":{"width":"100%","background-color":"transparent"},"silex-id-1530835012904-3":{"width":"100%","background-color":"transparent"},"silex-id-1465466932973-6":{"width":"100%"},"silex-id-1530834503159-1":{"width":"100%"},"silex-id-1530834406227-0":{"top":"1218px","left":"11px","width":"400px","min-height":"510px"},"silex-id-1540479319820-68":{"width":"80%","height":"300px"},"silex-id-1488365905062-20":{"width":"100%"},"silex-id-1465466987435-8":{"width":"100%"},"silex-id-1488365138614-6":{"width":"100%","min-height":"500px"},"silex-id-1488364565045-0":{"width":"100%"},"silex-id-1488365471670-8":{"width":"100%"},"silex-id-1488365629067-12":{"width":"100%"},"silex-id-1488365805974-18":{"width":"100%"},"silex-id-1442914737143-3":{"left":"100px","top":"100px"},"silex-id-1442914589168-2":{"width":"100%","left":"48px","top":"8831px"},"silex-id-1540456449724-2":{"min-height":"337px"},"silex-id-1540456435864-1":{"left":"3px","top":"205px"},"silex-id-1488365138615-7":{},"silex-id-1553450059029-8":{"min-height":"300px"},"silex-id-1563296048914-0":{"min-height":"300px"},"silex-id-1567848122369-0":{"width":"100%"},"silex-id-1570537712523-0":{"width":"100%"}},"prodotypeData":{"component":{"silex-id-1540479319820-68":{"name":"form1","templateName":"form","sendTo":"jeremy.oury@orange.fr","buttonTextColor":"#ffedfb","buttonBackgroundColor":"#000000","buttonBorderColor":"#000000","field1":false}},"style":{"text-style-1":{"className":"text-style-1","templateName":"text","displayName":"Text Style 1","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-1","pseudoClass":"normal","Paragraph":{"color":"#000000"}}}}},"text-style-2":{"className":"text-style-2","templateName":"text","displayName":"Text Style 2","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-3":{"className":"text-style-3","templateName":"text","displayName":"Text Style 3","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-4":{"className":"text-style-4","templateName":"text","displayName":"Text Style 4","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-5":{"className":"text-style-5","templateName":"text","displayName":"Text Style 5","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-6":{"className":"text-style-6","templateName":"text","displayName":"Text Style 6","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-7":{"className":"text-style-7","templateName":"text","displayName":"Text Style 7","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-8":{"className":"text-style-8","templateName":"text","displayName":"Text Style 8","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-9":{"className":"text-style-9","templateName":"text","displayName":"Text Style 9","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-10":{"className":"text-style-10","templateName":"text","displayName":"Text Style 10","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-11":{"className":"text-style-11","templateName":"text","displayName":"Text Style 11","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-12":{"className":"text-style-12","templateName":"text","displayName":"Text Style 12","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-13":{"className":"text-style-13","templateName":"text","displayName":"Text Style 13","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-14":{"className":"text-style-14","templateName":"text","displayName":"Text Style 14","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-15":{"className":"text-style-15","templateName":"text","displayName":"Text Style 15","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-16":{"className":"text-style-16","templateName":"text","displayName":"Text Style 16","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-17":{"className":"text-style-17","templateName":"text","displayName":"Text Style 17","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-18":{"className":"text-style-18","templateName":"text","displayName":"Text Style 18","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-19":{"className":"text-style-19","templateName":"text","displayName":"Text Style 19","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-20":{"className":"text-style-20","templateName":"text","displayName":"Text Style 20","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-21":{"className":"text-style-21","templateName":"text","displayName":"Text Style 21","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-22":{"className":"text-style-22","templateName":"text","displayName":"Text Style 22","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-23":{"className":"text-style-23","templateName":"text","displayName":"Text Style 23","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-24":{"className":"text-style-24","templateName":"text","displayName":"Text Style 24","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-24","pseudoClass":"normal","Paragraph":{"color":"#e81800"}}}}},"text-style-25":{"className":"text-style-25","templateName":"text","displayName":"Text Style 25","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-25","pseudoClass":"normal","Paragraph":{"line-height":"0.2"}}}}},"text-style-26":{"className":"text-style-26","templateName":"text","displayName":"Text Style 26","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-26","pseudoClass":"normal","Paragraph":{"font-weight":"normal"}}}}},"all-style":{"className":"all-style","templateName":"text","displayName":"All style","styles":{"desktop":{"normal":{"className":"all-style","pseudoClass":"normal"}}}},"text-style-27":{"className":"text-style-27","templateName":"text","displayName":"Text Style 27","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-27","pseudoClass":"normal","All":{"color":"#ffffff"},"Heading2":{"color":"#ffffff"}}}}},"text-style-28":{"className":"text-style-28","templateName":"text","displayName":"Text Style 28","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-31","pseudoClass":"normal","All":{"color":"#ffffff"}}}}},"text-style-29":{"className":"text-style-29","templateName":"text","displayName":"Text Style 29","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-31","pseudoClass":"normal","All":{"color":"#ffffff"}}}}},"text-style-30":{"className":"text-style-30","templateName":"text","displayName":"Text Style 30","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-31","pseudoClass":"normal","All":{"color":"#ffffff"}}}}},"text-style-31":{"className":"text-style-31","templateName":"text","displayName":"Text Style 31","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-31","pseudoClass":"normal","All":{"color":"#ffffff"}}}}},"text-style-32":{"className":"text-style-32","templateName":"text","displayName":"Text Style 32","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-32","pseudoClass":"normal","All":{"font-weight":"900"}}}}},"text-style-33":{"className":"text-style-33","templateName":"text","displayName":"Text Style 33","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-33","pseudoClass":"normal","All":{"font-size":"45px","letter-spacing":""},"Heading1":{"font-size":"40px","letter-spacing":"40px"},"Heading3":{"font-size":"48px"},"Heading2":{"font-size":"24px"}}}}},"text-style-34":{"className":"text-style-34","templateName":"text","displayName":"Text Style 34","styles":{"desktop":{"normal":{"templateName":"text","className":"text-style-34","pseudoClass":"normal","All":{"font-size":"30px"}}}}},"my-style":{"className":"my-style","templateName":"text","displayName":"My Style","styles":{"desktop":{"normal":{"className":"my-style","pseudoClass":"normal","All":{"font-family":"'josefin slab', sans-serif"}}}}}}}}]</script>
+    <title>ARCAAN Collective ❘ digital artists ❘ </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.2" data-silex-viewport="">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+<link href="../arcaancollective.fr/image/ARCAAN%20favicon.png" rel="shortcut icon"><meta name="description" content="Movements and pixels. Sound and synesthesia. "><meta name="publicationPath" content="{&quot;absPath&quot;:&quot;/ce/github/get/www.arcaancollective.fr/master&quot;,&quot;isDir&quot;:true,&quot;mime&quot;:&quot;application/octet-stream&quot;,&quot;name&quot;:&quot;master&quot;,&quot;folder&quot;:&quot;www.arcaancollective.fr&quot;,&quot;path&quot;:&quot;www.arcaancollective.fr/master&quot;,&quot;service&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://editor.silex.me/ce/github/get/www.arcaancollective.fr/master&quot;}"><meta name="twitter:title" content="ARCAAN Collective ❘ Digital Artists"><meta name="og:title" content="ARCAAN Collective ❘ Digital Artists"><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-1">.text-style-1 p {color: #000000;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-2">.text-style-2 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-3">.text-style-3 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-4">.text-style-4 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-5">.text-style-5 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-6">.text-style-6 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-7">.text-style-7 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-8">.text-style-8 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-9">.text-style-9 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-10">.text-style-10 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-11">.text-style-11 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-12">.text-style-12 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-13">.text-style-13 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-14">.text-style-14 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-15">.text-style-15 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-16">.text-style-16 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-17">.text-style-17 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-18">.text-style-18 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-19">.text-style-19 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-20">.text-style-20 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-21">.text-style-21 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-22">.text-style-22 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-23">.text-style-23 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-24">.text-style-24 p {color: #e81800;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-25">.text-style-25 p {line-height: 0.2;}</style><meta name="twitter:card" content="summary"><meta name="twitter:description" content="Movements and pixels. Sound and synesthesia."><meta name="og:description" content="Movements and pixels. Sound and synesthesia."><meta name="twitter:image" content="https://static.wixstatic.com/media/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg/v1/crop/x_0,y_84,w_1080,h_996/fill/w_437,h_403,al_c,q_90/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg"><meta name="og:image" content="https://static.wixstatic.com/media/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg/v1/crop/x_0,y_84,w_1080,h_996/fill/w_437,h_403,al_c,q_90/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg"><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-26">.text-style-26 p {font-weight: normal;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="all-style"></style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-27">.text-style-27 h2 {color: #ffffff;}.text-style-27.text-element > .silex-element-content {color: #ffffff;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-28">.text-style-28.text-element > .silex-element-content {color: #ffffff;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-29">.text-style-29.text-element > .silex-element-content {color: #ffffff;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-30">.text-style-30.text-element > .silex-element-content {color: #ffffff;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-31">.text-style-31.text-element > .silex-element-content {color: #ffffff;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-32">.text-style-32.text-element > .silex-element-content {font-weight: 900;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-33">.text-style-33 h1 {font-size: 40px; letter-spacing: 40px;}.text-style-33 h2 {font-size: 24px;}.text-style-33 h3 {font-size: 48px;}.text-style-33.text-element > .silex-element-content {font-size: 45px;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="text-style-34">.text-style-34.text-element > .silex-element-content {font-size: 30px;}</style><style class="silex-prodotype-style" type="text/css" data-style-id="my-style">.my-style.text-element > .silex-element-content {font-family: 'josefin slab', sans-serif;}</style><meta name="hostingProvider" content="ghpages"><script src="https://editor.silex.me/static/2.10/unslider/unslider-min.js" data-silex-static="" data-dependency=""></script><link rel="stylesheet" href="https://editor.silex.me/static/2.10/unslider/unslider.css" data-silex-static="" data-dependency=""><link href="https://fonts.google.com/specimen/Josefin+Slab" rel="stylesheet" class="silex-custom-font"><meta name="websiteUrl" content="http://arcaancollective.fr/"><!-- Silex HEAD tag do not remove --><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="OMWtjYxfWLCCIXfpcFNiOklDTJIBVJPDVvjn8DZ-ZWQ">
+<base target="_blank">
+<body link="white" vlink="white" alink="white"> 
+<script src="https://cdn.jsdelivr.net/scrollreveal.js/3.2.0/scrollreveal.min.js" type="text/javascript"></script>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.3"></script><!-- End of Silex HEAD tag do not remove --></head>
+
+<body data-silex-id="body-initial" class="body-initial enable-mobile all-style prevent-draggable prevent-resizable prevent-selectable silex-runtime" data-silex-type="container-element" style=""><div data-silex-type="container-element" class="prevent-draggable container-element website-min-width editable-style silex-id-1488364699113-3 section-element hide-on-mobile prevent-resizable" data-silex-id="silex-id-1488364699113-3">
+        <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488364699112-2 silex-container-content container-element prevent-draggable" data-silex-id="silex-id-1488364699112-2">
+            
+        <div data-silex-type="text-element" class="editable-style silex-id-1465466883063-5 text-element nav full-width hide-on-mobile text-style-27 text-style-28 text-style-29 text-style-30 text-style-31" data-silex-id="silex-id-1465466883063-5" style="" title="Menu site jeremyoury.fr">
+                <div class="silex-element-content normal">
+                    <ul>
+                        <li>&nbsp;|&nbsp;&nbsp;&nbsp; <a href="#about">About</a></li>|
+                        <li><a href="#mapping">MAPPING</a><a> &nbsp;&nbsp;</a>&nbsp; <a>|&nbsp; &nbsp; </a><a href="#services">FULLDOME</a></li>|
+                        <li><a href="#performance">pERFORMANCE</a></li>|
+                        <li><a href="#installation">INSTALLATION</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#contact">Contact&nbsp;&nbsp; &nbsp; |<br></a></li>
+                    </ul>
+                </div>
+            </div></div>
+    </div><div data-silex-type="container-element" class="prevent-draggable container-element website-min-width editable-style silex-id-1488365138615-7 section-element prevent-resizable" data-silex-id="silex-id-1488365138615-7">
+        
+        
+    <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488365138614-6 silex-container-content container-element prevent-draggable home" data-silex-id="silex-id-1488365138614-6" title="fulldome skylark presentation jeremyoury.fr">
+            
+            
+            
+        <div data-silex-type="text-element" class="editable-style text-element header silex-id-1530835012904-3 text-style-33" data-silex-id="silex-id-1530835012904-3" style="" title="JEREMY OURY">
+                <div class="silex-element-content normal"><h3>ARCAAN Collective<br></h3><h3><b><b></b></b></h3></div>
+            </div><div data-silex-type="image-element" class="editable-style silex-id-1570538037403-3 image-element" data-silex-id="silex-id-1570538037403-3"><img src="../arcaancollective.fr/image/ARCAAN%20LOGO.png" class="silex-element-content"></div></div></div><div data-silex-type="container-element" class="prevent-draggable container-element website-min-width editable-style silex-id-1488364565046-1 section-element prevent-resizable" data-silex-id="silex-id-1488364565046-1">
+        <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488364565045-0 silex-container-content container-element prevent-draggable" data-silex-id="silex-id-1488364565045-0">
+            
+            
+        <div data-silex-type="text-element" class="editable-style silex-id-1465466932973-6 text-element paged-element lol page-arcaan" data-silex-id="silex-id-1465466932973-6" style="" title="about">
+                <div class="silex-element-content normal">
+                    <h1 class="heading1"><br><font size="6"><span style="color: rgb(255, 255, 255);"></span></font></h1><h1 class="heading1"><font size="6"><span style="color: rgb(255, 255, 255);">| </span>About <span style="color: rgb(255, 255, 255);">|</span></font><span style="font-weight: normal;"><font size="3"><br></font></span><span style="font-weight: normal;"></span><span style="font-family: verdana, sans-serif;"><br></span>
+                        
+                        
+                    </h1><span style="font-family: verdana, sans-serif;">
+                </span><h1 class="heading1"></h1></div>
+            </div><div data-silex-type="text-element" class="editable-style text-element silex-id-1530834503159-1 text-style-26" data-silex-id="silex-id-1530834503159-1" style="" title="jeremy oury presentation"><div class="silex-element-content normal"><h1>  <br>ARCAAN Collective</h1>Aide et Recherche pour la Création Artistique Audiovisuelle et Numérique<br><p></p><p>Initiate by Antoine Briot and Jeremy Oury, ARCAAN Collective combines audio and visual skills to make singular mapping or digital installation.</p><p>We pursue explorations into intermedia forms to create synaesthesic and minimalist partition with unexpected narrations in various way (architectural mapping, immersive installation, fulldome, ...). We focus on a research about illusions on immersive forms in order to place the viewer at the center of a minimalist virtual universe to disrupt his perception of space.</p><p>Our last project IMMERSIVE was diffused in several digital festival (VISUALIA 2018 and 2019 Croatia, BAM 2018 Belgium, ICIA 2018 Poland, ISEA Symponium 2019 South Korea), in various fulldome festivals and won the public prize at ICIA 2018 and the "<i>Best short fulldome form"</i> award at the Macon Film Festival 2019.&nbsp;<br></p><p></p></div></div><div data-silex-type="text-element" class="editable-style silex-id-1530834406227-0 text-element from-left hide-on-mobile" data-silex-id="silex-id-1530834406227-0" style="" title="Awards jeremy oury"><div class="silex-element-content normal">&nbsp;<br><p>Award best Fulldome Short Form - Macon film festival 2019 (USA) <br>Award best 360 film - HIFF 2019 (USA)<br>Award public Prize - ICIA festival 2019 (Poland) <br>Award mapping 1st amator - FIMG 2015 (Spain)</p><p></p><h1></h1></div></div><div data-silex-type="text-element" class="editable-style text-element text-style-26 silex-id-1567848122369-0" data-silex-id="silex-id-1567848122369-0" style="" title="jeremy oury presentation"><div class="silex-element-content normal"><h1>  <br>Awards<br></h1><p><br></p></div></div><div data-silex-type="image-element" class="editable-style silex-id-1570533296248-0 image-element" data-silex-id="silex-id-1570533296248-0"><img src="../arcaancollective.fr/image/ARCAAN%20team.jpg" class="silex-element-content"></div></div>
+    </div><div data-silex-type="container-element" class="prevent-draggable container-element website-min-width editable-style silex-id-1488365471671-9 section-element prevent-resizable" data-silex-id="silex-id-1488365471671-9">
+        <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488365471670-8 silex-container-content container-element prevent-draggable" data-silex-id="silex-id-1488365471670-8">
+            
+            
+            
+            
+            <div data-silex-type="text-element" class="editable-style text-element silex-id-1465467207085-12 paged-element from-bottom hide-on-mobile page-arcaan" data-silex-id="silex-id-1465467207085-12">
+                <div class="silex-element-content normal"><br></div>
+            </div>
+            
+            
+        <div data-silex-type="container-element" class="editable-style container-element from-bottom silex-id-1540485568596-173" data-silex-id="silex-id-1540485568596-173" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1540485568597-174" data-silex-id="silex-id-1540485568597-174" style="" title="video vimeo mapping irrelevant"><div class="silex-element-content"><div class="group" id="process-video">
+  <div id="poster-image"></div>
+  <iframe id="vimeo" src="https://player.vimeo.com/video/144356637?wmode=opaque&amp;api=1%20%20&amp;player_id=vimeo&amp;title=0&amp;byline=0&amp;portrait=1&amp;badge=0&amp;color=ffffff&amp;wmode=opaque" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" width="100%" height="auto" frameborder="0"></iframe>
+</div></div></div><div data-silex-type="text-element" class="editable-style text-element text-style-25 silex-id-1540485568599-175" data-silex-id="silex-id-1540485568599-175" style=""><div class="silex-element-content normal"><p>| IRRELEVANT | <br></p><p>- FIMG -</p><p>Spain 2015<br></p></div></div><div data-silex-type="text-element" class="editable-style text-element text-style-25 silex-id-1540486413842-193" data-silex-id="silex-id-1540486413842-193" style=""><div class="silex-element-content normal"><div><font size="3">1st Amator Award <br></font></div></div></div></div><div data-silex-type="container-element" class="editable-style container-element from-bottom silex-id-1563298119868-12" data-silex-id="silex-id-1563298119868-12" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1563298119868-13" data-silex-id="silex-id-1563298119868-13" style="" title="video vimeo lightscape mapping zsolnay light art"><div class="silex-element-content"><div class="group" id="process-video">
+  <div id="poster-image"></div>
+  <iframe id="vimeo" src="https://player.vimeo.com/video/348835122?wmode=opaque&amp;api=1%20%20&amp;player_id=vimeo&amp;title=0&amp;byline=0&amp;portrait=1&amp;badge=0&amp;color=ffffff&amp;wmode=opaque" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" width="100%" height="auto" frameborder="0"></iframe>
+</div></div></div><div data-silex-type="text-element" class="editable-style text-element text-style-25 silex-id-1563298119869-14" data-silex-id="silex-id-1563298119869-14" style=""><div class="silex-element-content normal"><p>| LIGHTSCAPE | <br></p><p>- ZSOLNAY LIGHT ART -</p><p>Hungary 2019<br></p></div></div></div><div data-silex-type="container-element" class="editable-style container-element from-bottom silex-id-1540482674380-81" data-silex-id="silex-id-1540482674380-81" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1540482674380-82" data-silex-id="silex-id-1540482674380-82" style="" title="video vimeo sonhos lucidos rio mapping festival"><div class="silex-element-content"><div class="group" id="process-video">
+  <div id="poster-image"></div>
+  <iframe id="vimeo" src="https://player.vimeo.com/video/364976235?wmode=opaque&amp;api=1%20%20&amp;player_id=vimeo&amp;title=0&amp;byline=0&amp;portrait=1&amp;badge=0&amp;color=ffffff&amp;wmode=opaque" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" width="100%" height="auto" frameborder="0"></iframe>
+</div></div></div><div data-silex-type="text-element" class="editable-style text-element text-style-25 silex-id-1540482674382-83" data-silex-id="silex-id-1540482674382-83" style=""><div class="silex-element-content normal"><p>| EMERSIVE | <br></p><p>- VISULIA FESTIVAL -</p><p>Croatia 2019<br></p></div></div></div><div data-silex-type="container-element" class="editable-style silex-id-1540456449724-2 container-element from-bottom" data-silex-id="silex-id-1540456449724-2" style="" title="immersive"><div data-silex-type="html-element" class="editable-style silex-id-1540454366740-0 html-element" data-silex-id="silex-id-1540454366740-0" style="" title="video immersive visualia festival bam vimeo"><div class="silex-element-content"><div class="group" id="process-video">
+  <div id="poster-image"></div>
+  <iframe id="vimeo" src="https://player.vimeo.com/video/293459079?wmode=opaque&amp;api=1%20%20&amp;player_id=vimeo&amp;title=0&amp;byline=0&amp;portrait=1&amp;badge=0&amp;color=ffffff&amp;wmode=opaque" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" width="100%" height="auto" frameborder="0"></iframe>
+</div></div></div><div data-silex-type="text-element" class="editable-style silex-id-1540456435864-1 text-element text-style-25" data-silex-id="silex-id-1540456435864-1" style="" title="presentation immersive visualia bam festival"><div class="silex-element-content normal"><p>| IMMERSIVE | <br></p><p>- Festival VISUALIA - CROATIA <br></p><p>- BAM festival - BELGIUM <br></p><p>- ISEA symponium - SOUTH KOREA</p><p>2018<br></p></div></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1465466987435-8 paged-element page-arcaan mapping text-style-34" data-silex-id="silex-id-1465466987435-8" title="visual project">
+                <div class="silex-element-content normal"><br><br>| MAPPING |<br>﻿﻿﻿</div>
+            </div><div data-silex-type="text-element" class="editable-style text-element silex-id-1570537712523-0 mapping" data-silex-id="silex-id-1570537712523-0" title="visual project">
+                <div class="silex-element-content normal"><p><br></p></div>
+            </div></div>
+    </div><div data-silex-type="container-element" class="prevent-draggable container-element website-min-width editable-style silex-id-1488365629067-13 section-element prevent-resizable" data-silex-id="silex-id-1488365629067-13">
+        <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488365629067-12 silex-container-content container-element prevent-draggable" data-silex-id="silex-id-1488365629067-12">
+            
+        <div data-silex-type="text-element" class="editable-style text-element silex-id-1465477372671-26 paged-element services hide-on-mobile text-style-34 page-arcaan" data-silex-id="silex-id-1465477372671-26" title="mapping" style="">
+                <div class="silex-element-content normal"><br>| FULLDOME |</div>
+            </div><div data-silex-type="container-element" class="editable-style container-element from-bottom silex-id-1553450059029-8" data-silex-id="silex-id-1553450059029-8" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1553450059030-9" data-silex-id="silex-id-1553450059030-9" style="" title="video fulldome immersive vimeo"><div class="silex-element-content"><div class="group" id="process-video">
+  <div id="poster-image"></div>
+  <iframe id="vimeo" src="https://player.vimeo.com/video/311217995?wmode=opaque&amp;api=1%20%20&amp;player_id=vimeo&amp;title=0&amp;byline=0&amp;portrait=1&amp;badge=0&amp;color=ffffff&amp;wmode=opaque" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" width="100%" height="auto" frameborder="0"></iframe>
+</div></div></div><div data-silex-type="text-element" class="editable-style text-element text-style-25 silex-id-1553450059034-10" data-silex-id="silex-id-1553450059034-10" style=""><div class="silex-element-content normal"><p>| IMMERSIVE | <br></p><p>- fulldome on tour - <br></p></div></div><div data-silex-type="text-element" class="editable-style text-element text-style-25 silex-id-1540459349896-13" data-silex-id="silex-id-1540459349896-13" style=""><div class="silex-element-content normal">Award best fulldome short form 2019<br></div></div></div></div>
+    </div><div data-silex-type="container-element" class="prevent-draggable container-element website-min-width editable-style silex-id-1488365537239-11 section-element hide-on-mobile prevent-resizable" data-silex-id="silex-id-1488365537239-11">
+        <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488365537239-10 silex-container-content container-element prevent-draggable" data-silex-id="silex-id-1488365537239-10">
+            
+            
+            
+            
+            
+            
+            
+            
+        <div data-silex-type="text-element" class="editable-style text-element silex-id-1465467258395-16 paged-element hide-on-mobile page-arcaan performance text-style-34" data-silex-id="silex-id-1465467258395-16" title="theater">
+                <div class="silex-element-content normal"><br><br>| PERFORMANCE |<br><br></div>
+            </div><div data-silex-type="container-element" class="editable-style container-element from-bottom silex-id-1540460118816-26 hide-on-mobile" data-silex-id="silex-id-1540460118816-26" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1540460118817-27 hide-on-mobile" data-silex-id="silex-id-1540460118817-27" style="" title="a quoi tu reves video traces cie vimeo"><div class="silex-element-content"><div class="group" id="process-video">
+  <div id="poster-image"></div>
+  <iframe id="vimeo" src="https://player.vimeo.com/video/163797201?wmode=opaque&amp;api=1%20%20&amp;player_id=vimeo&amp;title=0&amp;byline=0&amp;portrait=1&amp;badge=0&amp;color=ffffff&amp;wmode=opaque" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" width="100%" height="auto" frameborder="0"></iframe>
+</div></div></div><div data-silex-type="text-element" class="editable-style text-element text-style-25 silex-id-1540460118819-28" data-silex-id="silex-id-1540460118819-28" style=""><div class="silex-element-content normal"><p></p><p>| Eggs Odd | <br></p>- research -<p></p></div></div></div></div>
+    </div><div data-silex-type="container-element" class="prevent-draggable container-element website-min-width editable-style silex-id-1488365682509-15 section-element hide-on-mobile prevent-resizable" data-silex-id="silex-id-1488365682509-15">
+        <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488365682508-14 silex-container-content container-element prevent-draggable" data-silex-id="silex-id-1488365682508-14">
+            
+        <div data-silex-type="text-element" class="editable-style text-element silex-id-1465477397939-27 paged-element hide-on-mobile page-arcaan installation text-style-34" data-silex-id="silex-id-1465477397939-27" style="" title="VJing">
+                <div class="silex-element-content normal"><br><br>| INSTALLATION |<br><br></div>
+            </div><div data-silex-type="container-element" class="editable-style container-element from-bottom silex-id-1563296048914-0" data-silex-id="silex-id-1563296048914-0" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1563296048915-1" data-silex-id="silex-id-1563296048915-1" style="" title="video youtube 360 immersive"><div class="silex-element-content"><div class="group" id="process-video">
+  <div id="poster-image"></div>
+  <iframe src="https://www.youtube.com/embed/me8co8pFyY0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" width="auto" height="auto" frameborder="0"></iframe>
+</div>
+</div></div><div data-silex-type="text-element" class="editable-style text-element text-style-25 silex-id-1563296048915-2" data-silex-id="silex-id-1563296048915-2" style=""><div class="silex-element-content normal"><p>| IMMERSIVE | <br></p><p>- 360° installation / VR - <br></p></div></div><div data-silex-type="text-element" class="editable-style text-element text-style-25 silex-id-1563296048915-3" data-silex-id="silex-id-1563296048915-3" style=""><div class="silex-element-content normal">Public Award ICIA 2019<br></div></div></div></div>
+    </div>
+    
+    
+    
+    
+
+
+
+
+
+
+
+    <div class="silex-pages">
+        
+
+        <a id="page-arcaan" data-silex-type="page-element" class="page-element" href="#!page-arcaan">arcaan</a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+
+
+<div data-silex-type="container-element" class="prevent-draggable container-element website-min-width editable-style silex-id-1488365805975-19 section-element prevent-resizable" data-silex-id="silex-id-1488365805975-19">
+        <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488365805974-18 silex-container-content container-element prevent-draggable" data-silex-id="silex-id-1488365805974-18">
+            <div data-silex-type="text-element" class="editable-style text-element silex-id-1465477486469-29 paged-element picture-bg contact page-arcaan" data-silex-id="silex-id-1465477486469-29" title="contact">
+                <div class="silex-element-content normal"><div><font size="6"><span style="color: rgb(255, 255, 255);"><br></span></font></div><div><font size="6"><span style="color: rgb(255, 255, 255);"><br></span></font></div><div><font size="6"><span style="color: rgb(255, 255, 255);">| </span>Contact </font><font size="6"><span style="color: rgb(255, 255, 255);">|</span></font></div></div>
+            </div>
+            
+            
+            
+            
+            
+        <div data-silex-type="html-element" class="editable-style silex-id-1540479319820-68 html-element silex-component silex-component-form silex-use-height-not-minheight" data-silex-id="silex-id-1540479319820-68" style="" title="form adress mail jeremy oury"><div class="silex-element-content"><form id="id_1540479381237_42" action="https://formspree.io/jeremy.oury@orange.fr" method="POST">
+  
+  
+  <div>
+    <label for="field2">Your email adress</label>
+    <input required="" id="field2" name="field2" placeholder="your@email.com" type="text">
+  </div>
+  
+  
+  <div class="fill-vertical">
+    <label for="field3">Your message</label>
+    <textarea required="" id="field3" name="field3" placeholder="What you have to say"></textarea>
+  </div>
+  
+  <input value="Send" type="submit">
+</form>
+<style>#id_1540479381237_42 input[type=text], select {width: 100%; padding: 12px 20px; margin: 8px 0; display: inline-block; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box;}#id_1540479381237_42 input[type=submit] {width: 100%; background-color: #000000; color: #ffedfb; padding: 14px 20px; margin: 8px 0; border: 1px solid #000000; border-radius: 3px; cursor: pointer;}#id_1540479381237_42 label {color: #000000;}#id_1540479381237_42 .fill-vertical {flex: 1 1 auto; display: flex; flex-direction: column;}#id_1540479381237_42 .fill-vertical textarea {flex: 1 1 auto; width: 100%; height: 150px; padding: 12px 20px; box-sizing: border-box; border: 2px solid #ccc; border-radius: 3px; background-color: #f8f8f8; font-size: 16px; resize: none;}#id_1540479381237_42 {border-radius: 3px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;}</style>
+
+</div></div></div>
+    </div><div data-silex-type="container-element" class="prevent-draggable container-element website-min-width editable-style silex-id-1488365905062-21 section-element prevent-resizable" data-silex-id="silex-id-1488365905062-21">
+        <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488365905062-20 silex-container-content container-element prevent-draggable" data-silex-id="silex-id-1488365905062-20">
+            
+        <div data-silex-type="image-element" class="editable-style silex-id-1570538184811-4 image-element" data-silex-id="silex-id-1570538184811-4" data-silex-href="https://www.facebook.com/arcaancollective/" title="facebook logo arcaan collective"><img src="facebook.png" class="silex-element-content"></div><div data-silex-type="image-element" class="editable-style silex-id-1570538224477-5 image-element" data-silex-id="silex-id-1570538224477-5" data-silex-href="https://www.instagram.com/jeremy_oury/" title="instagram logo arcaan collective"><img src="instagram.png" class="silex-element-content"></div><div data-silex-type="image-element" class="editable-style silex-id-1570538251557-6 image-element" data-silex-id="silex-id-1570538251557-6" data-silex-href="https://www.vimeo.com/arcaancollective" title="vimeo logo arcaan collective"><img src="vimeo.png" class="silex-element-content" alt="vimeo"></div></div>
+    </div><div data-silex-id="silex-id-1442914589168-2" class="editable-style silex-id-1442914589168-2 container-element background" data-silex-type="container-element" style="">
+        
+    <div data-silex-id="silex-id-1442914737143-3" class="editable-style silex-id-1442914737143-3 text-element" data-silex-type="text-element" style="" title="logo silex">
+            <div class="silex-element-content normal">
+                <div style="text-align: center;"><br></div><div style="text-align: center;"><br></div><div style="text-align: center;"><br></div><div style="text-align: center;"><a href="//www.silex.me">Powered by Silex</a></div>
+            </div>
+        </div></div></body></html>
