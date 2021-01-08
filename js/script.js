@@ -1,5 +1,8 @@
 
 
+    window.silex = window.silex || {}
+    window.silex.data = {"site":{"width":960},"pages":[{"id":"page-arcaan","displayName":"arcaan","link":{"linkType":"LinkTypePage","href":"#!page-arcaan"},"canDelete":true,"canProperties":true,"canMove":true,"canRename":true,"opened":false}]}
+
         /**
          * keep the menu visible when you scroll down
          */
