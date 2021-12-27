@@ -1,5 +1,8 @@
 
 
+    window.silex = window.silex || {}
+    window.silex.data = {"site":{"width":960},"pages":[{"id":"page-arcaan","displayName":"arcaan","link":{"linkType":"LinkTypePage","href":"#!page-arcaan"},"canDelete":true,"canProperties":true,"canMove":true,"canRename":true,"opened":false}]}
+
         /**
          * keep the menu visible when you scroll down
          */
@@ -101,19 +104,3 @@
                }
             });
         });
-        
-        /**
-         * this widget https://github.com/silexlabs/Silex/issues/443
-         */
-        $(function() {
-        
-            window.sr = ScrollReveal({
-                distance: '100px'
-            });
-            sr.reveal('.from-left', { origin:  'left'});
-            sr.reveal('.from-right', { origin:  'right'});
-            sr.reveal('.from-top', { origin:  'top'});
-            sr.reveal('.from-bottom', { origin:  'bottom'});
-        
-        })
-    
