@@ -81,20 +81,48 @@
 
     
     
-<link href="css/ARCAAN%20favicon.png" rel="shortcut icon"><meta name="description" content="Movements and pixels. Sound and synesthesia. "><meta name="twitter:title" content="ARCAAN Collective ❘ Digital Artists"><meta name="og:title" content="ARCAAN Collective ❘ Digital Artists"><meta name="twitter:card" content="summary"><meta name="twitter:description" content="Movements and pixels. Sound and synesthesia."><meta name="og:description" content="Movements and pixels. Sound and synesthesia."><meta name="twitter:image" content="https://static.wixstatic.com/media/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg/v1/crop/x_0,y_84,w_1080,h_996/fill/w_437,h_403,al_c,q_90/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg"><meta name="og:image" content="https://static.wixstatic.com/media/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg/v1/crop/x_0,y_84,w_1080,h_996/fill/w_437,h_403,al_c,q_90/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg"><script src="js/unslider-min.js"></script><link rel="stylesheet" href="css/unslider.css"><link href="https://fonts.google.com/specimen/Josefin+Slab" rel="stylesheet" class="silex-custom-font"><meta name="websiteUrl" content="http://arcaancollective.fr/"><script src="js/script.js" type="text/javascript"></script><link href="css/styles.css" rel="stylesheet" type="text/css"><link rel="preconnect" href="https://www.youtube.com">
-<link rel="preconnect" href="https://i.ytimg.com">
-<link rel="preconnect" href="https://i9.ytimg.com">
-<link rel="preconnect" href="https://s.ytimg.com">
-
-<link rel="preconnect" href="https://player.vimeo.com">
-<link rel="preconnect" href="https://i.vimeocdn.com">
-<link rel="preconnect" href="https://f.vimeocdn.com">
-
-<script src="script.js" defer;=""></script>
-
-<script var="" tag="document.createElement('script');" tag.src="https://www.youtube.com/iframe_api" ;="" firstscripttag="document.getElementsByTagName('script')[0];" firstscripttag.parentnode.insertbefore(tag,="" firstscripttag);=""></script>
-
-<script src="https://player.vimeo.com/api/player.js"></script><style>body { opacity: 0; transition: .25s opacity ease; }</style></head>
+<link href="css/ARCAAN%20favicon.png" rel="shortcut icon"><meta name="description" content="Movements and pixels. Sound and synesthesia. "><meta name="twitter:title" content="ARCAAN Collective ❘ Digital Artists"><meta name="og:title" content="ARCAAN Collective ❘ Digital Artists"><meta name="twitter:card" content="summary"><meta name="twitter:description" content="Movements and pixels. Sound and synesthesia."><meta name="og:description" content="Movements and pixels. Sound and synesthesia."><meta name="twitter:image" content="https://static.wixstatic.com/media/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg/v1/crop/x_0,y_84,w_1080,h_996/fill/w_437,h_403,al_c,q_90/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg"><meta name="og:image" content="https://static.wixstatic.com/media/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg/v1/crop/x_0,y_84,w_1080,h_996/fill/w_437,h_403,al_c,q_90/85e18b_bfd3e4b8503c46bba34db4d1decbd38c~mv2.jpg"><script src="js/unslider-min.js"></script><link rel="stylesheet" href="css/unslider.css"><link href="https://fonts.google.com/specimen/Josefin+Slab" rel="stylesheet" class="silex-custom-font"><meta name="websiteUrl" content="http://arcaancollective.fr/"><script src="js/script.js" type="text/javascript"></script><link href="css/styles.css" rel="stylesheet" type="text/css">
+<script>
+ 
+  function labnolIframe(div) {
+    var iframe = document.createElement('iframe');
+    iframe.setAttribute(
+      'src',
+      'https://www.youtube.com/embed/' + div.dataset.id + '?autoplay=1&rel=0'
+    );
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allowfullscreen', '1');
+    iframe.setAttribute(
+      'allow',
+      'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+    );
+    div.parentNode.replaceChild(iframe, div);
+  }
+ 
+  function initYouTubeVideos() {
+    var playerElements = document.getElementsByClassName('youtube-player');
+    for (var n = 0; n < playerElements.length; n++) {
+      var videoId = playerElements[n].dataset.id;
+      var div = document.createElement('div');
+      div.setAttribute('data-id', videoId);
+      var thumbNode = document.createElement('img');
+      thumbNode.src = '//i.ytimg.com/vi/ID/hqdefault.jpg'.replace(
+        'ID',
+        videoId
+      );
+      div.appendChild(thumbNode);
+      var playButton = document.createElement('div');
+      playButton.setAttribute('class', 'play');
+      div.appendChild(playButton);
+      div.onclick = function () {
+        labnolIframe(this);
+      };
+      playerElements[n].appendChild(div);
+    }
+  }
+ 
+  document.addEventListener('DOMContentLoaded', initYouTubeVideos);
+</script><style>body { opacity: 0; transition: .25s opacity ease; }</style></head>
 
 <body class="body-initial enable-mobile all-style prevent-resizable prevent-selectable editable-style silex-runtime silex-published" data-silex-type="container-element" style="" data-current-page="page-arcaan"><section data-silex-type="container-element" class="container-element website-min-width editable-style silex-id-1488364699113-3 section-element hide-on-mobile prevent-resizable">
         <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488364699112-2 container-element">
@@ -127,7 +155,7 @@ about the temporality to disrupt
 the spectator's perception of space. Each building and immersive space becomes a visual and 
 sound laboratory for the collective, conducive to the emergence of a new
  artistic grammar.<br><br>Since its creation, the collective has been rewarded for its first 
-mapping Irrelevant, winner of the FIMG 2015 amateur prize (Spain). After that, the collective's productions have been regularly selected in various international festivals and won several artistic prizes. <br><p><br></p><p></p></div></div><div data-silex-type="text-element" class="editable-style silex-id-1530834406227-0 text-element hide-on-mobile" style="" title="Awards jeremy oury"><div class="silex-element-content normal"><p>Award best Sacem soundtrack - Courant3D 2020 (France) <br>
+mapping Irrelevant, winner of the FIMG 2015 amateur prize (Spain). After that, the collective's productions have been regularly selected in various international festivals and won several artistic prizes. <br><p><br></p><p></p></div></div><div data-silex-type="text-element" class="editable-style silex-id-1530834406227-0 text-element hide-on-mobile" style="" title="Awards jeremy oury" href="null"><div class="silex-element-content normal"><p>Award best Sacem soundtrack - Courant3D 2020 (France) <br>
 Award best Fulldome Short Form - Macon film festival 2019 (USA)<br>
 Award best 360 film - HIFF 2019 (USA)<br>
 Award public Prize - ICIA festival 2019 (Poland) <br>
@@ -170,7 +198,7 @@ Award mapping 1st amator - FIMG 2015 (Spain)</p><p></p><p></p><h1></h1></div></d
 </div></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1585909994009-16 text-style-25" style="top: 157px; left: 2px; width: 266px; min-height: 96px;" title="presentation immersive visualia bam festival"><div class="silex-element-content normal"><p>| IMMERSIVE | <br></p><p>- ILLUMINATE festival 2019 - <br></p><p><br></p></div></div></div><div data-silex-type="container-element" class="editable-style container-element silex-id-1610100926457-1 from-bottom" title="" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1610100926457-2" title="video youtube immersive mapping kyiv lights festival" style=""><div class="silex-element-content"><div class="group" id="process-video">
   <div id="poster-image"></div>
   <iframe src="https://www.youtube.com/embed/JB4qbFVOv8s?controls=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" width="100%" height="auto" frameborder="0"></iframe>
-</div></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1610100926457-3 text-style-25" title="" style=""><div class="silex-element-content normal"><p>| IMMERSIVE | <br></p><p>- Kyiv Lights Festival -</p><p>Ukraine 2019<br></p><span class="_wysihtml-temp-caret-fix" style="position: absolute; display: block; min-width: 1px; z-index: 99999;">﻿</span></div></div></div><div data-silex-type="container-element" class="editable-style container-element from-bottom silex-id-1575363854162-0" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1575363854162-1" style="" title="video YouTube emersive ACSEE festival china"><div class="silex-element-content"><iframe width="100%" height="100%" src="https://www.youtube.com/embed/SGJrS_WWPPM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1575363854272-2 text-style-25" style=""><div class="silex-element-content normal"><p>| EMERSIVE | <br></p><p>- ACSEE Festival -</p><p>China 2019<br></p></div></div></div><div data-silex-type="container-element" class="editable-style container-element silex-id-1610101037389-4 from-bottom" title="" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1610101037389-5" title="video youtuve emersive nits video mapping ull nu Andorra" style=""><div class="silex-element-content"><iframe width="100%" height="100%" src="https://www.youtube.com/embed/3sZ3yIhsrIM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1610101037390-6 text-style-25" title="" style=""><div class="silex-element-content normal"><p>| EMERSIVE | <br></p><p>- Nits de video mapping -</p><p>Andorra 2020<br></p></div></div></div><div data-silex-type="container-element" class="editable-style container-element silex-id-1640548793706-4 from-bottom" title=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1640548793707-5" title="video YouTube emancipate SSA mapping"><div class="silex-element-content"><iframe width="100%" height="100%" src="https://www.youtube.com/embed/hBk4xnLJhh4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1640548793707-6 text-style-25" title="" href="null"><div class="silex-element-content normal"><p>| EMANCIPATE | <br></p><p>- SSA Mapping -</p><p>Brasil 2021<br></p></div></div></div></div>
+</div></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1610100926457-3 text-style-25" title="" style=""><div class="silex-element-content normal"><p>| IMMERSIVE | <br></p><p>- Kyiv Lights Festival -</p><p>Ukraine 2019<br></p><span class="_wysihtml-temp-caret-fix" style="position: absolute; display: block; min-width: 1px; z-index: 99999;">﻿</span></div></div></div><div data-silex-type="container-element" class="editable-style container-element from-bottom silex-id-1575363854162-0" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1575363854162-1" style="" title="video YouTube emersive ACSEE festival china"><div class="silex-element-content"><iframe width="100%" height="100%" src="https://www.youtube.com/embed/SGJrS_WWPPM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1575363854272-2 text-style-25" style=""><div class="silex-element-content normal"><p>| EMERSIVE | <br></p><p>- ACSEE Festival -</p><p>China 2019<br></p></div></div></div><div data-silex-type="container-element" class="editable-style container-element silex-id-1610101037389-4 from-bottom" title="" style=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1610101037389-5" title="video youtuve emersive nits video mapping ull nu Andorra" style=""><div class="silex-element-content"><div class="youtube-player" data-id="3sZ3yIhsrIM"></div></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1610101037390-6 text-style-25" title="" style=""><div class="silex-element-content normal"><p>| EMERSIVE | <br></p><p>- Nits de video mapping -</p><p>Andorra 2020<br></p></div></div></div><div data-silex-type="container-element" class="editable-style container-element silex-id-1640548793706-4 from-bottom" title=""><div data-silex-type="html-element" class="editable-style html-element silex-id-1640548793707-5" title="video YouTube emancipate SSA mapping"><div class="silex-element-content"><div class="youtube-player" data-id="hBk4xnLJhh4"></div></div></div><div data-silex-type="text-element" class="editable-style text-element silex-id-1640548793707-6 text-style-25" title="" href="null"><div class="silex-element-content normal"><p>| EMANCIPATE | <br></p><p>- SSA Mapping -</p><p>Brasil 2021<br></p></div></div></div></div>
     </section><section data-silex-type="container-element" class="container-element website-min-width editable-style silex-id-1488365629067-13 section-element prevent-resizable">
         <div data-silex-type="container-element" class="editable-style silex-element-content website-width silex-id-1488365629067-12 container-element">
             
@@ -326,7 +354,7 @@ Award mapping 1st amator - FIMG 2015 (Spain)</p><p></p><p></p><h1></h1></div></d
             
         <div data-silex-type="text-element" class="editable-style text-element silex-id-1465477486469-29 paged-element picture-bg contact page-arcaan paged-element-visible" title="contact">
                 <div class="silex-element-content normal"><div><font size="6"><span style="color: rgb(255, 255, 255);"><br></span></font></div><div><font size="6"><span style="color: rgb(255, 255, 255);"><br></span></font></div><div><font size="6"><span style="color: rgb(255, 255, 255);">| </span>Contact </font><font size="6"><span style="color: rgb(255, 255, 255);">|</span></font></div></div>
-            </div><div data-silex-type="html-element" class="editable-style silex-id-1540479319820-68 html-element silex-component silex-component-form silex-use-height-not-minheight" style="" title="form adress mail arcaan collective"><div class="silex-element-content"><form id="id_1640599185467_834" action="https://formspree.io/jeremy.oury@orange.fr" method="POST">
+            </div><div data-silex-type="html-element" class="editable-style silex-id-1540479319820-68 html-element silex-component silex-component-form silex-use-height-not-minheight" style="" title="form adress mail arcaan collective"><div class="silex-element-content"><form id="id_1641661795397_966" action="https://formspree.io/jeremy.oury@orange.fr" method="POST">
   
   
   <div>
@@ -342,7 +370,7 @@ Award mapping 1st amator - FIMG 2015 (Spain)</p><p></p><p></p><h1></h1></div></d
   
   <input type="submit" value="Send">
 </form>
-<style>#id_1640599185467_834 input[type=text], select {width: 100%; padding: 12px 20px; margin: 8px 0; display: inline-block; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box;}#id_1640599185467_834 input[type=submit] {width: 100%; background-color: #000000; color: #ffedfb; padding: 14px 20px; margin: 8px 0; border: 1px solid #000000; border-radius: 3px; cursor: pointer;}#id_1640599185467_834 label {color: #000000;}#id_1640599185467_834 .fill-vertical {flex: 1 1 auto; display: flex; flex-direction: column;}#id_1640599185467_834 .fill-vertical textarea {flex: 1 1 auto; width: 100%; height: 150px; padding: 12px 20px; box-sizing: border-box; border: 2px solid #ccc; border-radius: 3px; background-color: #f8f8f8; font-size: 16px; resize: none;}#id_1640599185467_834 {border-radius: 3px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;}</style>
+<style>#id_1641661795397_966 input[type=text], select {width: 100%; padding: 12px 20px; margin: 8px 0; display: inline-block; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box;}#id_1641661795397_966 input[type=submit] {width: 100%; background-color: #000000; color: #ffedfb; padding: 14px 20px; margin: 8px 0; border: 1px solid #000000; border-radius: 3px; cursor: pointer;}#id_1641661795397_966 label {color: #000000;}#id_1641661795397_966 .fill-vertical {flex: 1 1 auto; display: flex; flex-direction: column;}#id_1641661795397_966 .fill-vertical textarea {flex: 1 1 auto; width: 100%; height: 150px; padding: 12px 20px; box-sizing: border-box; border: 2px solid #ccc; border-radius: 3px; background-color: #f8f8f8; font-size: 16px; resize: none;}#id_1641661795397_966 {border-radius: 3px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;}</style>
 
 </div></div><div class="editable-style silex-id-1442914737143-3 text-element" data-silex-type="text-element" style="" title="logo silex">
             <div class="silex-element-content normal">
